@@ -20,10 +20,13 @@ If you were going to use this generator, you should treat the generated text as 
 ## Usage
 
 1. Copy `.env_example` to `backend/.env` and add the OpenAI API key and the candidate name/
-2. Replace `resume.pdf` with the resume from the actual candidate.
-3. Replace `sample_writing_stype.txt` with samples from the actual candidate.
-4. Run `pip install -r requirements.txt`
-5. Run `streamlit run app.py`
+OPENAI_API_KEY=
+CANDIDATE_NAME=''
+  
+3. Replace `resume.pdf` with the resume from the actual candidate.
+4. Replace `sample_writing_stype.txt` with samples from the actual candidate.
+5. Run `pip install -r requirements.txt`
+6. Run `streamlit run app.py`
 
 
 Updated:
