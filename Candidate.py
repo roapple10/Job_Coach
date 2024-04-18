@@ -5,7 +5,7 @@ from PyPDF2 import PdfReader
 
 class Candidate:
     def __init__(self, candidate_name):
-        self._local_files = ['app_data.js', 'resume.txt', 'resume.pdf']
+        self._local_files = [ 'data/resume.txt', 'data/resume.pdf']
         self._resume_source = None
         self._resume_texts = dict()
 
@@ -54,7 +54,7 @@ class Candidate:
 
     def _read_sample_writing(self):
         self.sample_writing_style = ''
-        if os.path.exists('./sample_writing_style.txt'):
-            with open('./sample_writing_style.txt', 'r') as sample_file:
+        if os.path.exists('data/sample_writing_style.txt'):
+            with open('data/sample_writing_style.txt', 'r') as sample_file:
                 self.sample_writing_style = sample_file.readlines()
                 self.sample_writing_style = ''.join(self.sample_writing_style)

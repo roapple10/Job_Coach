@@ -24,3 +24,8 @@ If you were going to use this generator, you should treat the generated text as 
 3. Replace `sample_writing_stype.txt` with samples from the actual candidate.
 4. Run `pip install -r requirements.txt`
 5. Run `streamlit run app.py`
+
+
+Updated:
+Wraped to Docker 
+Run  `chmod +x rebuild_image.sh; ./rebuild_image.sh`

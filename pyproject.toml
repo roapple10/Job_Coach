@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "ai-job-coach"
+version = "0.1.0"
+description = ""
+authors = ["raylin2023 <ray.lin@admazes.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.11.7"
+openai = "1.13.3"
+pypdf2 = "3.0.1"
+python-dotenv = "1.0.1"
+duckduckgo-search = "^5.3.0"
+selenium = "^4.19.0"
+matplotlib = "^3.8.4"
+pandas = "^2.2.2"
+streamlit = "^1.33.0"
+
+
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 88
+
