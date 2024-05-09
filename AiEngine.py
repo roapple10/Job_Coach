@@ -2,24 +2,31 @@ import hashlib
 import json
 import os
 import pickle
+from langchain_openai import ChatOpenAI
+from groq import Groq 
+# import openai as ai
 
-import openai as ai
+
 
 
 class AiEngine:
     def __init__(self, api_key, is_debug=False):
         self.is_debug = is_debug
 
-        ai.api_key = api_key
-        self.ai = ai
-        self.models = ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-turbo-preview']
-        self.selected_model = 'gpt-3.5-turbo'
+        
+        self.ai = Groq(    # This is the default and can be omitted
+                    api_key=api_key,)
+    
+        self.models = ["mixtral-8x7b-32768","llama3-8b-8192",]
+        self.selected_model = "mixtral-8x7b-32768"
         self.temperature = 0.9
         self.cache = dict()
 
         if os.path.exists('cache.pkl'):
             with open('cache.pkl', 'rb') as f:
                 self.cache = pickle.load(f)
+                
+    
 
     def get_prompt_response(self, messages: list) -> str:
 
@@ -31,16 +38,46 @@ class AiEngine:
         print('cache miss')
         if self.is_debug:
             print(messages)
-            
-        summary_result = self.ai.chat.completions.create(
-            model=self.selected_model,
-            temperature=self.temperature,
-            messages=messages,
-        )
 
-        result = summary_result.choices[0].message.content
+
+    
+        chat_completion = self.ai.chat.completions.create(
+            #
+            # Required parameters
+            #
+            messages=messages,
+
+            # The language model which will generate the completion.
+            model=self.selected_model,
+
+        
+            # Optional parameters
+            # Controls randomness: lowering results in less random completions.
+            # As the temperature approaches zero, the model will become deterministic
+            # and repetitive.
+            temperature=self.temperature,
+
+            # The maximum number of tokens to generate. Requests can use up to
+            # 32,768 tokens shared between prompt and completion.
+            # max_tokens=1024,
+
+            # Controls diversity via nucleus sampling: 0.5 means half of all
+            # likelihood-weighted options are considered.
+            top_p=1,
+
+            # A stop sequence is a predefined or user-specified text string that
+            # signals an AI to stop generating content, ensuring its responses
+            # remain focused and concise. Examples include punctuation marks and
+            # markers like "[end]".
+            stop=None,
+            # If set, partial message deltas will be sent.
+            stream=False,
+        )
+        result = chat_completion.choices[0].message.content
         if self.is_debug:
             print(result)
+        
+        
 
         self.add_to_cache(messages, result)
 

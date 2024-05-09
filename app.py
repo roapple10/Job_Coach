@@ -17,6 +17,8 @@ load_dotenv()
 ai_api_key = os.getenv('OPENAI_API_KEY')
 candidate_name = os.getenv('CANDIDATE_NAME')
 
+
+
 # Create instance of AI engine
 if 'ai' not in st.session_state:
     ai = AiEngine(ai_api_key, is_debug=False)
@@ -25,6 +27,7 @@ ai = st.session_state['ai']
 
 # Create instance of candidate
 if 'candidate' not in st.session_state:
+    
     candidate = Candidate(candidate_name)
     st.session_state['candidate'] = candidate
 candidate = st.session_state['candidate']
@@ -40,12 +43,14 @@ coach = Coach(candidate, job, ai)
 
 # Initialize streamlit
 st.set_page_config(page_title='AI Job Search Coach', page_icon='📝', layout='wide')
-st.title('📝 AI Job Search Coach')
+st.title('📝 AI Interviewer Assistant')
+
 
 # Sidebar
 with st.sidebar:
     st.subheader('Candidate Summary')
-    st.write('Candidate Name: ' + candidate_name)
+    candidate_name = st.text_input("Enter candidate name")
+    # st.write('Candidate Name: ' + candidate_name)
     candidate.resume_source = st.selectbox('Select Resume Source', options=candidate.resume_sources, index=0)
     st.write('Resume (word count):', len(candidate.resume_text.split()))
     st.write('Writing Style (word count): ', len(candidate.sample_writing_style.split()))
@@ -79,7 +84,7 @@ if job_description != job.job_description:
 
 if job.is_valid():
     # Main page
-    tab0, tab1, tab2, tab4 = st.tabs(['Analysis', 'Ask The Coach', 'Cover Letter',  'Company News'])
+    tab0, tab1, tab2, tab4 = st.tabs(['Candidate Summary', 'Candidate Analysis', 'Generate Interviewer Question',  'Company News'])
 
     with tab0:
         if job.is_valid():
@@ -114,20 +119,20 @@ if job.is_valid():
         st.markdown("""
             ## Experience Summarization
     
-            Let AI help answer questions about your work experience and employment opportunities. Here are a few example questions:
+            Let AI help answer questions about Candidate's work experience and employment opportunities. Here are a few example questions:
     
             ### Experience Specific
-            - What are the top 10 industries where my work experience is relevant?
-            - What are the top 5 most likely roles that match my work experience?
-            - Can you create a list of all my previous roles?
+            - What are the top 10 industries where Candidate's work experience is relevant?
+            - What are the top 5 most likely roles that match Candidate's work experience?
+            - Can you create a list of all Candidate's previous roles?
             - Can you provide 3-4 sentences, summarizing the Asset IQ project?
             - Can you provide 3-4 sentences, that summarizes the candidate's role in the Asset IQ project?
-            - Can you provide a single paragraph highlighting my experience? 
+            - Can you provide a single paragraph highlighting Candidate's experience? 
 
             ### Role Specific    
-            - Given the top_required_skills and candidate_strengths, can you provide 5 short bullet points that answer why I am a good fit for this role?
-            - Create a list of  the top 5 things i should highlight from my work experience?
-            - Given the job description and my resume, generate a fine tuned resume specifically tailored to this role.
+            - Given the top_required_skills and candidate_strengths, can you provide 5 short bullet points that answer why Candidate's am a good fit for this role?
+            - Create a list of  the top 5 things i should highlight from Candidate's work experience?
+            - Given the job description and Candidate's resume, generate a fine tuned resume specifically tailored to this role.
         """
                     )
         with st.form('q_and_a_form'):
@@ -147,27 +152,36 @@ if job.is_valid():
 
     with tab2:
         # Tool to help generate cover letter drafts
-        st.header('Cover Letter Generation')
+        st.header('Interviewer question Generater')
         with st.form('cover_letter_form'):
             additional_guidance = st.text_area('Additional Guidance', value='', height=200)
             is_cover_letter_in_my_writing_style = st.checkbox('Use my writing style', value=True)
 
-            create_cover_letter = st.form_submit_button('Create New Cover Letter')
-            refine_cover_letter = st.form_submit_button('Refine Cover Letter')
+            create_cover_letter = st.form_submit_button('Create Interviewer question')
+            # refine_cover_letter = st.form_submit_button('Refine Cover Letter')
 
             # Use OpenAI API to create cover letter
             if create_cover_letter:
-                coach.create_new_cover_letter(
+                coach.create_InterviewQuestion(
                     is_cover_letter_in_my_writing_style,
                     additional_guidance
                 )
-            if refine_cover_letter:
-                coach.refine_cover_letter(
-                    is_cover_letter_in_my_writing_style,
-                    additional_guidance
-                )
-
-        st.write(job.cover_letter)
+            # if refine_cover_letter:
+            #     coach.refine_cover_letter(
+            #         is_cover_letter_in_my_writing_style,
+            #         additional_guidance
+            #     )
+        # Splitting the text into a list of questions based on numbers followed by a period and space
+   
+        text = job.cover_letter
+        if text:
+            print(text)
+            questions = [q.strip() for q in text.split('\n') if q]
+            # Create a DataFrame
+            df_questions = pd.DataFrame(questions, columns=['Questions'])
+            # st.write(job.cover_letter)
+            # Display the DataFrame in Streamlit
+            st.dataframe(df_questions)
 
     # with tab3:
     #     # Tool to help generate cover letter drafts

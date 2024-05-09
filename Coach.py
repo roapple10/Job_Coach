@@ -2,9 +2,10 @@ from AiEngine import AiEngine
 from Candidate import Candidate
 from Job import Job
 from agents.Advisor import Advisor
-from agents.CandidateAnalyzer import CandidateAnalyzer
 from agents.CompanyInvestigator import CompanyInvestigator
-from agents.CoverLetterWriter import CoverLetterWriter
+from agents.CandidateAnalyzer import CandidateAnalyzer
+# from agents.CoverLetterWriter import CoverLetterWriter
+from agents.InterviewQuestion import InterviewQuestion
 from agents.JobDescriptionAnalyzer import JobDescriptionAnalyzer
 from agents.SentimentAnalyzer import SentimentAnalyzer
 
@@ -65,7 +66,22 @@ class Coach:
             print(f'An error occurred: {e}')
             print(f'Response: {response}')
 
-    def create_new_cover_letter(self,
+    # def create_new_cover_letter(self,
+    #                             is_cover_letter_in_my_writing_style: bool,
+    #                             additional_guidance: str = None
+    #                             ):
+
+    #     if not self.job.is_valid():
+    #         return
+
+    #     print('cover_letter')
+
+    #     agent = CoverLetterWriter(self.ai, self.candidate, self.job,
+    #                               additional_guidance=additional_guidance,
+    #                               is_rewrite=False,
+    #                               use_writing_style=is_cover_letter_in_my_writing_style)
+    #     self.job.cover_letter = agent.work()
+    def create_InterviewQuestion(self,
                                 is_cover_letter_in_my_writing_style: bool,
                                 additional_guidance: str = None
                                 ):
@@ -73,31 +89,32 @@ class Coach:
         if not self.job.is_valid():
             return
 
-        print('cover_letter')
+        print('Interview question')
 
-        agent = CoverLetterWriter(self.ai, self.candidate, self.job,
+        agent = InterviewQuestion(self.ai, self.candidate, self.job,
                                   additional_guidance=additional_guidance,
                                   is_rewrite=False,
                                   use_writing_style=is_cover_letter_in_my_writing_style)
         self.job.cover_letter = agent.work()
+    
 
-    def refine_cover_letter(self,
-                            is_cover_letter_in_my_writing_style: bool,
-                            additional_guidance: str = None
-                            ):
+    # def refine_cover_letter(self,
+    #                         is_cover_letter_in_my_writing_style: bool,
+    #                         additional_guidance: str = None
+    #                         ):
 
-        if not self.job.is_valid():
-            return
+    #     if not self.job.is_valid():
+    #         return
 
-        if self.job.cover_letter is None or len(self.job.cover_letter) == 0:
-            self.create_new_cover_letter(is_cover_letter_in_my_writing_style, additional_guidance)
+    #     if self.job.cover_letter is None or len(self.job.cover_letter) == 0:
+    #         self.create_new_cover_letter(is_cover_letter_in_my_writing_style, additional_guidance)
 
-        print('refine_cover_letter')
-        agent = CoverLetterWriter(self.ai, self.candidate, self.job,
-                                  additional_guidance=additional_guidance,
-                                  is_rewrite=True,
-                                  use_writing_style=is_cover_letter_in_my_writing_style)
-        self.job.cover_letter = agent.work()
+    #     print('refine_cover_letter')
+    #     agent = CoverLetterWriter(self.ai, self.candidate, self.job,
+    #                               additional_guidance=additional_guidance,
+    #                               is_rewrite=True,
+    #                               use_writing_style=is_cover_letter_in_my_writing_style)
+    #     self.job.cover_letter = agent.work()
 
     def analyze_company(self, number_of_articles: int, additional_search_text: str = None):
         print('analyze_company')
